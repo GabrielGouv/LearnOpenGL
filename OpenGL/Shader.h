@@ -8,6 +8,10 @@
 #include <sstream>
 #include <iostream>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 class Shader
 {
 public:
@@ -17,10 +21,11 @@ public:
 	Shader(const GLchar* vertexShaderPath, const GLchar* fragmentShaderPath);
 
 	void use();
+	std::string readFile(std::string path) const;
 	void setBool(const std::string &name, bool value) const;
 	void setInt(const std::string &name, int value) const;
 	void setFloat(const std::string &name, float value) const;
-	void setMatrix4f(const std::string &name, const GLfloat *value) const;
+	void setMat4(const std::string &name, glm::mat4 &mat) const;
 
 };
 

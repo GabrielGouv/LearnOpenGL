@@ -7,29 +7,9 @@ Shader::Shader(const GLchar* vertexShaderPath, const GLchar* fragmentShaderPath)
 
 	std::string vertexShaderCode;
 	std::string fragmentShaderCode;
-	std::ifstream vertexShaderFile;
-	std::ifstream fragmentShaderFile;
 
-	vertexShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-	fragmentShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-
-	try {
-		vertexShaderFile.open(vertexShaderPath);
-		fragmentShaderFile.open(fragmentShaderPath);
-
-		std::stringstream vertexShaderStream, fragmentShaderStream;
-
-		vertexShaderStream << vertexShaderFile.rdbuf();
-		fragmentShaderStream << fragmentShaderFile.rdbuf();
-		vertexShaderFile.close();
-		fragmentShaderFile.close();
-
-		vertexShaderCode = vertexShaderStream.str();
-		fragmentShaderCode = fragmentShaderStream.str();
-	}
-	catch (std::ifstream::failure e) {
-		std::cout << "ERROR:SHADER::FILE_NOT_SUCCESFULLY_READ" << std::endl;
-	}
+	vertexShaderCode = readFile(vertexShaderPath);
+	fragmentShaderCode = readFile(fragmentShaderPath);
 
 	const char* vShaderCode = vertexShaderCode.c_str();
 	const char* fShaderCode = fragmentShaderCode.c_str();
@@ -80,6 +60,28 @@ Shader::Shader(const GLchar* vertexShaderPath, const GLchar* fragmentShaderPath)
 
 }
 
+std::string Shader::readFile(std::string path) const {
+	std::string content;
+	std::ifstream file;
+
+	file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+
+	try {
+		file.open(path);
+
+		std::stringstream fileStream;
+		fileStream << file.rdbuf();
+		file.close();
+
+		return fileStream.str();
+	}
+	catch (std::ifstream::failure &e) {
+		std::cout << "Unable to load file \"" << path << "\"" << "\n" << e.what() << "\n";
+		return NULL;
+	}
+
+}
+
 void Shader::use() {
 	glUseProgram(Id);
 }
@@ -96,6 +98,6 @@ void Shader::setFloat(const std::string &name, float value) const {
 	glUniform1f(glGetUniformLocation(Id, name.c_str()), value);
 }
 
-void Shader::setMatrix4f(const std::string &name, const GLfloat *value) const {
-	glUniformMatrix4fv(glGetUniformLocation(Id, name.c_str()), 1, GL_FALSE, value);
+void Shader::setMat4(const std::string &name, glm::mat4 &mat) const {
+	glUniformMatrix4fv(glGetUniformLocation(Id, name.c_str()), 1, GL_FALSE, &mat[0][0]);
 }
