@@ -1,13 +1,7 @@
 #include "Camera.h"
 
 Camera::Camera(
-	glm::vec3 position,
-	glm::vec3 up,
-	float yaw,
-	float pitch) 
-	: Front(glm::vec3(0.0f, 0.0f, -1.0f)), 
-	MovementSpeed(SPEED),
-	MouseSensitivity(SENSITIVITY)
+	glm::vec3 position, glm::vec3 up, float yaw, float pitch) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY)
 {
 	Position = position;
 	WorldUp = up;
@@ -75,6 +69,11 @@ void Camera::ProcessMouseScroll(float yoffset)
 
 	if (Zoom >= 45.0f)
 		Zoom = 45.0f;
+}
+
+void Camera::IncreaseMovementSpeed(float value)
+{
+	MovementSpeed += value;
 }
 
 void Camera::updateCameraVectors()

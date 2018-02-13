@@ -48,6 +48,8 @@ public:
 
 	void ProcessMouseScroll(float yoffset);
 
+	void IncreaseMovementSpeed(float value);
+
 private:
 
 	void updateCameraVectors();
